@@ -6,7 +6,7 @@ export const msalConfig = {
     authority:
       "https://login.microsoftonline.com/a4eaa551-a3fd-442a-ac8c-968dbe27a805",
     redirectUri: "http://localhost:3000",
-    // redirectUri: "https://azure-ad-rbac.web.app/",
+    // redirectUri: "https://access-control-e65a4.web.app/",
   },
   cache: {
     cacheLocation: "localStorage",

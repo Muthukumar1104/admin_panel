@@ -161,8 +161,8 @@ const AdminDashboard = () => {
   return (
     <Layout>
       <div className="container mx-auto p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold">Dashboard</h1>
+        <div className="flex flex-col md:flex-row items-left md:items-center justify-start md:justify-between mb-4">
+          <h1 className="text-xl font-bold sm:mb-3">Dashboard</h1>
           <p className="text-xl text-gray-600">Welcome {displayName}!</p>
         </div>
         {loading ? (

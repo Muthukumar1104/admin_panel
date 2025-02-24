@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
   return (
     <div className="relative h-screen overflow-hidden">
       <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
-      <div className="flex pt-16 h-[calc(100vh-4rem)]">
+      <div className="flex pt-2 md:pt-2 sm:pt-0 h-[calc(100vh-4rem)]">
         <div className="hidden md:block fixed top-14 left-0 w-64 h-[calc(100vh-4rem)] overflow-y-auto bg-gray-200">
           <Sidebar />
         </div>
