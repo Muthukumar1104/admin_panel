@@ -1,0 +1,5 @@
+{
+  "projects": {
+    "default": "azure-ad-rbac"
+  }
+}

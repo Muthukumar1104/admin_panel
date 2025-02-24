@@ -1,39 +1,80 @@
 import React, { useState } from "react";
 import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../../msalConfig";
+import { jwtDecode } from "jwt-decode"; // Ensure you have installed jwt-decode
+import { loginRequest, msalConfig } from "../../msalConfig";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { instance } = useMsal();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleNormalLogin = (e) => {
-    e.preventDefault();
-    if (email && password) {
-      toast.success("Normal Login successful!");
-      navigate("/dashboard");
-    } else {
-      toast.error("Please provide email and password.");
-    }
-  };
+  // Custom login using backend proxy with ROPC flow
+  // const handleCustomLogin = async (e) => {
+  //   e.preventDefault();
+  //   if (!credentials.email || !credentials.password) {
+  //     toast.error("Please provide both email and password.");
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch("http://localhost:3001/api/login", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         email: credentials.email,
+  //         password: credentials.password,
+  //       }),
+  //     });
+  //     const data = await response.json();
+  //     if (response.ok && data.access_token) {
+  //       if (data.id_token) {
+  //         try {
+  //           const decoded = jwtDecode(data.id_token);
+  //           const account = {
+  //             homeAccountId: decoded.oid || decoded.sub,
+  //             environment: "login.microsoftonline.com",
+  //             tenantId: decoded.tid,
+  //             username: decoded.preferred_username || credentials.email,
+  //             name: decoded.name,
+  //           };
+  //           instance.setActiveAccount(account);
+  //         } catch (err) {
+  //           console.error("Error decoding id_token", err);
+  //           toast.error("Custom login error: Token processing failed.");
+  //         }
+  //       }
+  //       localStorage.setItem("accessToken", data.access_token);
+  //       toast.success("Custom login successful!");
+  //       navigate("/dashboard");
+  //     } else {
+  //       toast.error(
+  //         "Custom login failed: " + (data.error_description || data.error)
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Custom login error:", error);
+  //     toast.error("Custom login error: " + error.message);
+  //   }
+  //   setIsLoading(false);
+  // };
 
-  const handleAzureLogin = (e) => {
+  // Azure Login using MSAL
+  const handleAzureLogin = async (e) => {
     e.preventDefault();
-    const request = { ...loginRequest, loginHint: email };
+    const request = { ...loginRequest, loginHint: credentials.email };
     instance
       .loginPopup(request)
       .then((res) => {
         instance.setActiveAccount(res.account);
-        toast.success("Azure Login successful!");
-        console.log("login", res);
-        navigate("/dashboard");
+        toast.success("Azure AD login successful!");
+        navigate("/");
       })
       .catch((error) => {
-        console.error("Azure Login error: ", error);
-        toast.error("Azure Login failed.");
+        console.error("Azure AD login error:", error);
+        toast.error("Azure AD login failed.");
       });
   };
 
@@ -54,11 +95,13 @@ const Login = () => {
             <input
               id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={credentials.email}
+              onChange={(e) =>
+                setCredentials({ ...credentials, email: e.target.value })
+              }
               placeholder="you@example.com"
-              required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/70"
+              required
             />
           </div>
           <div className="mb-6">
@@ -71,30 +114,34 @@ const Login = () => {
             <input
               id="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={credentials.password}
+              onChange={(e) =>
+                setCredentials({ ...credentials, password: e.target.value })
+              }
               placeholder="********"
-              required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/70"
+              required
             />
           </div>
           <div className="flex flex-col space-y-4">
             <button
               type="submit"
-              onClick={handleNormalLogin}
+              // onClick={handleCustomLogin}
+              // disabled={isLoading}
               className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              Login
+              {isLoading ? "Logging in..." : "Login"}
             </button>
             <button
               type="button"
               onClick={handleAzureLogin}
               className="w-full flex items-center justify-center bg-white border border-blue-500 text-blue-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
+              <span className="ml-2">Login with</span>
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Microsoft_Azure_Logo.svg"
                 alt="Azure Logo"
-                className="w-[60px]"
+                className="ms-2 w-[60px]"
               />
             </button>
           </div>

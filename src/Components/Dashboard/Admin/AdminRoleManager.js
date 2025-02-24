@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../../msalConfig";
+import { loginRequest } from "../../../msalConfig";
 import { toast } from "react-toastify";
-import Layout from "../../Layout/Layout";
+import Layout from "../../../Layout/Layout";
 
 const AdminRoleManager = () => {
   const { instance, accounts } = useMsal();
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
-  const [roles] = useState(["Admin", "Manager", "User"]);
+  const [roles] = useState(["Manager", "User"]);
   const [selectedRole, setSelectedRole] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -35,10 +35,6 @@ const AdminRoleManager = () => {
                 (user) => user.id !== activeUserId
               );
               setUsers(filteredUsers);
-              console.log(
-                "dataassss",
-                data.value?.filter((data) => data?.givenName == null)
-              );
             })
             .catch((err) => {
               console.error("Error fetching users", err);
@@ -137,14 +133,12 @@ const AdminRoleManager = () => {
   return (
     <Layout>
       <div className="container mx-auto p-8">
+        <h1 className="text-xl font-bold mb-4"> Role Management</h1>
         <div className="card shadow p-4">
-          <h2 className="card-title text-center text-2xl mb-4">
-            Admin Role Manager
-          </h2>
           <div className="mb-3">
-            <label className="form-label">Select User</label>
+            <label className="text-[17px] form-label">Select User</label>
             <select
-              className="form-select"
+              className="text-[17px] form-select"
               onChange={(e) => setSelectedUser(e.target.value)}
               value={selectedUser}
             >
@@ -157,9 +151,9 @@ const AdminRoleManager = () => {
             </select>
           </div>
           <div className="mb-3">
-            <label className="form-label">Select Role:</label>
+            <label className="text-[17px] form-label">Select Role</label>
             <select
-              className="form-select"
+              className="text-[17px] form-select"
               onChange={(e) => setSelectedRole(e.target.value)}
               value={selectedRole}
             >
@@ -173,7 +167,7 @@ const AdminRoleManager = () => {
           </div>
           <div className="text-center">
             <button
-              className="btn btn-success"
+              className="btn btn-success text-[17px] bg-green-500 hover:bg-green-700 border-none"
               onClick={updateUserRole}
               disabled={isUpdating}
             >
