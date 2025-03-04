@@ -61,6 +61,10 @@ const Login = () => {
   //   setIsLoading(false);
   // };
 
+  const handleCustomLogin = () => {
+    toast.info("Please use Azure AD login");
+  };
+
   // Azure Login using MSAL
   const handleAzureLogin = async (e) => {
     e.preventDefault();
@@ -126,7 +130,7 @@ const Login = () => {
           <div className="flex flex-col space-y-4">
             <button
               type="submit"
-              // onClick={handleCustomLogin}
+              onClick={handleCustomLogin}
               // disabled={isLoading}
               className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
