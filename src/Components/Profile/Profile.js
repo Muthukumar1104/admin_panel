@@ -9,9 +9,9 @@ const Profile = () => {
   const currentRole = useUserRole();
   const [profile, setProfile] = useState({
     displayName: "",
-    jobTitle: null,
-    mobilePhone: null,
-    officeLocation: null,
+    jobTitle: "",
+    mobilePhone: "",
+    officeLocation: "",
     userPrincipalName: "",
   });
   const [loading, setLoading] = useState(false);
