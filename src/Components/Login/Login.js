@@ -172,14 +172,14 @@ const Login = () => {
             </div>
           </div>
           <div className="flex flex-col space-y-4">
-            {/* <button
+            <button
               type="submit"
               onClick={handleCustomLogin}
               disabled={isLoading}
               className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               {isLoading ? "Logging in..." : "Login"}
-            </button> */}
+            </button>
             <button
               type="button"
               onClick={handleAzureLogin}
