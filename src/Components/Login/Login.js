@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useMsal } from "@azure/msal-react";
-import { jwtDecode } from "jwt-decode"; // Ensure you have installed jwt-decode
-import { loginRequest, msalConfig } from "../../msalConfig";
+import { useMsal } from "@azure/msal-react"
+import { loginRequest  } from "../../msalConfig";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

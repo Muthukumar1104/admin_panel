@@ -19,7 +19,6 @@ const generatePassword = (length = 10) => {
 const UserManagement = () => {
   const { instance, accounts } = useMsal();
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Modal state variables
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

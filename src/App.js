@@ -20,9 +20,6 @@ const AdminRoleManager = lazy(() =>
 const ManagerDashboard = lazy(() =>
   import("./Components/Dashboard/Manager/ManagerDashboard")
 );
-const UserDashboard = lazy(() =>
-  import("./Components/Dashboard/User/UserDashboard")
-);
 
 const AppRoutes = () => {
   return (
