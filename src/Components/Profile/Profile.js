@@ -3,10 +3,12 @@ import { useMsal } from "@azure/msal-react";
 import { toast } from "react-toastify";
 import Layout from "../../Layout/Layout";
 import useUserRole from "../../CustomHook/useUserRole";
+import { useUser } from "../../Context/UserContext";
 
 const Profile = () => {
   const { instance, accounts } = useMsal();
   const currentRole = useUserRole();
+  const { user, setUser } = useUser();
   const [profile, setProfile] = useState({
     displayName: "",
     jobTitle: "",
@@ -16,7 +18,7 @@ const Profile = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  // Fetch the current user's profile
+  // Fetch the current user's profile using Microsoft Graph /me endpoint
   const fetchProfile = async () => {
     if (accounts.length === 0) return;
     setLoading(true);
@@ -31,13 +33,15 @@ const Profile = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        setProfile({
-          displayName: data.displayName,
-          jobTitle: data.jobTitle,
-          mobilePhone: data.mobilePhone,
-          officeLocation: data.officeLocation,
-          userPrincipalName: data.userPrincipalName,
-        });
+        const updatedProfile = {
+          displayName: data.displayName || "",
+          jobTitle: data.jobTitle || "",
+          mobilePhone: data.mobilePhone || "",
+          officeLocation: data.officeLocation || "",
+          userPrincipalName: data.userPrincipalName || "",
+        };
+        setProfile(updatedProfile);
+        setUser(updatedProfile); // update shared context
       } else {
         toast.error("Failed to fetch profile: " + data.error.message);
       }
@@ -58,8 +62,6 @@ const Profile = () => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  console.log(profile);
-
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -76,16 +78,17 @@ const Profile = () => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          displayName: profile.displayName != "" ? profile.displayName : null,
-          jobTitle: profile.jobTitle != "" ? profile.jobTitle : null,
-          mobilePhone: profile.mobilePhone != "" ? profile.mobilePhone : null,
+          displayName: profile.displayName !== "" ? profile.displayName : null,
+          jobTitle: profile.jobTitle !== "" ? profile.jobTitle : null,
+          mobilePhone: profile.mobilePhone !== "" ? profile.mobilePhone : null,
           officeLocation:
-            profile.officeLocation != "" ? profile.officeLocation : null,
+            profile.officeLocation !== "" ? profile.officeLocation : null,
           userPrincipalName: profile.userPrincipalName,
         }),
       });
       if (res.ok) {
         toast.success("Profile updated successfully!");
+        setUser(profile);
       } else {
         const data = await res.json();
         toast.error("Failed to update profile: " + data.error.message);
@@ -99,8 +102,8 @@ const Profile = () => {
 
   return (
     <Layout>
-      <div className="p-4">
-        <h2 className="text-xl font-bold mb-4">Profile</h2>
+      <div className="container mx-auto px-4 py-6">
+        <h2 className="text-xl md:text-2xl font-bold mb-4">Profile</h2>
         <form onSubmit={handleUpdateProfile} className="space-y-4">
           <div>
             <label
@@ -133,7 +136,7 @@ const Profile = () => {
           </div>
           <div>
             <label
-              htmlFor="displayName"
+              htmlFor="userPrincipalName"
               className="block text-[17px] text-sm font-medium text-gray-700 mb-2"
             >
               Email
@@ -150,7 +153,7 @@ const Profile = () => {
           </div>
           <div>
             <label
-              htmlFor="displayName"
+              htmlFor="jobTitle"
               className="block text-[17px] text-sm font-medium text-gray-700 mb-2"
             >
               Job Title
@@ -166,7 +169,7 @@ const Profile = () => {
           </div>
           <div>
             <label
-              htmlFor="displayName"
+              htmlFor="mobilePhone"
               className="block text-[17px] font-medium text-gray-700 mb-2"
             >
               Mobile Phone
@@ -182,7 +185,7 @@ const Profile = () => {
           </div>
           <div>
             <label
-              htmlFor="displayName"
+              htmlFor="officeLocation"
               className="block text-[17px] font-medium text-gray-700 mb-2"
             >
               Office Location

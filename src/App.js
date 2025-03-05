@@ -8,6 +8,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import UserManagement from "./Components/Usermanagement/UserManagement";
 import Profile from "./Components/Profile/Profile";
+import { UserProvider } from "./Context/UserContext";
 
 const RoleRedirector = lazy(() => import("./CustomHook/RoleRedirector"));
 const Login = lazy(() => import("./Components/Login/Login"));
@@ -49,10 +50,12 @@ const AppRoutes = () => {
 
 const App = () => {
   return (
-    <Router>
-      <ToastContainer />
-      <AppRoutes />
-    </Router>
+    <UserProvider>
+      <Router>
+        <ToastContainer />
+        <AppRoutes />
+      </Router>
+    </UserProvider>
   );
 };
 

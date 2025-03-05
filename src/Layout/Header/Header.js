@@ -2,22 +2,34 @@ import React from "react";
 import { useMsal } from "@azure/msal-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../Context/UserContext";
 
 const Header = ({ toggleSidebar, sidebarOpen }) => {
   const { instance } = useMsal();
+  const { user } = useUser();
   const navigate = useNavigate();
 
+  // Use the user from context, fallback to MSAL active account if not available
   const displayName =
+    user?.displayName ||
     instance.getActiveAccount()?.name ||
     instance.getActiveAccount()?.username ||
     "";
   const trimmedName = displayName.trim();
-  const initials =
-    trimmedName.length >= 2
-      ? `${trimmedName[0].toUpperCase()}${trimmedName[
-          trimmedName.length - 1
-        ].toUpperCase()}`
-      : trimmedName[0]?.toUpperCase() || "";
+
+  let initials = "";
+  const nameParts = trimmedName.split(" ").filter(Boolean);
+  if (nameParts.length >= 2) {
+    initials = `${nameParts[0][0].toUpperCase()}${nameParts[
+      nameParts.length - 1
+    ][0].toUpperCase()}`;
+  } else if (trimmedName.length >= 2) {
+    initials = `${trimmedName[0].toUpperCase()}${trimmedName[
+      trimmedName.length - 1
+    ].toUpperCase()}`;
+  } else {
+    initials = trimmedName[0]?.toUpperCase() || "";
+  }
 
   const handleLogout = () => {
     localStorage.clear();
