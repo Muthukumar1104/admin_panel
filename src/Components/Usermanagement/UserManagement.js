@@ -4,23 +4,12 @@ import { toast } from "react-toastify";
 import Layout from "../../Layout/Layout";
 import Modal from "./Modal";
 import UserTable from "./UserTable";
-
-// Helper function to generate a random password
-const generatePassword = (length = 10) => {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let password = "";
-  for (let i = 0; i < length; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return password;
-};
+import { generatePassword } from "../../Utils/Utils";
 
 const UserManagement = () => {
   const { instance, accounts } = useMsal();
   const [users, setUsers] = useState([]);
 
-  // Modal state variables
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

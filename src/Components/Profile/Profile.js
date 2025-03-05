@@ -41,7 +41,7 @@ const Profile = () => {
           userPrincipalName: data.userPrincipalName || "",
         };
         setProfile(updatedProfile);
-        setUser(updatedProfile); // update shared context
+        setUser(updatedProfile);
       } else {
         toast.error("Failed to fetch profile: " + data.error.message);
       }
