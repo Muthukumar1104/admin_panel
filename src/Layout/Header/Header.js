@@ -9,7 +9,6 @@ const Header = ({ toggleSidebar, sidebarOpen }) => {
   const { user } = useUser();
   const navigate = useNavigate();
 
-  // Use the user from context, fallback to MSAL active account if not available
   const displayName =
     user?.displayName ||
     instance.getActiveAccount()?.name ||
