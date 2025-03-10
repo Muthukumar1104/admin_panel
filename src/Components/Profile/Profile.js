@@ -18,7 +18,7 @@ const Profile = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  // Fetch the current user's profile using Microsoft Graph /me endpoint
+  // Fetch the current user's profile
   const fetchProfile = async () => {
     if (accounts.length === 0) return;
     setLoading(true);
